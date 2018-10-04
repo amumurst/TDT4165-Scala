@@ -13,7 +13,7 @@ val commonSettings: List[SettingsDefinition] = List(
 lazy val common = project.in(file("Common")).settings(commonSettings: _*).settings(name := "common")
 
 def opg(navn: String) =
-  sbt.Project.apply(navn, file(navn)).settings(commonSettings: _*).settings(name := navn).dependsOn(common)
+  sbt.Project.apply(navn, file(navn)).settings(commonSettings: _*).settings(name := navn, mainClass in (Compile, run) := Some("no.finn.Main")).dependsOn(common)
 
 lazy val Task0 = opg("Task0")
 lazy val Task1 = opg("Task1")

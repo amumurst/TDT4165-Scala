@@ -31,7 +31,7 @@ trait AdServer extends Server with Database[Ad] {
   }
 }
 
-object MainSolution extends AdServer with RealConsole {
+object Main extends AdServer with RealConsole {
   def main(args: Array[String]): Unit =
     run()
 }
