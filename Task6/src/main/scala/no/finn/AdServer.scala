@@ -12,12 +12,12 @@ trait AdServer extends Server with Database[Ad] {
   private def addAd(): IO[Unit] =
     for {
       adData <- readStringIO("Enter ad data: ")
-      output <- Ad
-                 .fromString(adData)
-                 .fold(err => printConsoleIO(err.message), ad => {
-                   val insertedId: AdId = insertInDatabase(ad)
-                   printConsoleIO(s"Inserted ad with id: $insertedId")
-                 })
+      output <- Ad.fromString(adData) match {
+                  case Left(err) => printConsoleIO(err.message)
+                  case Right(ad) =>
+                    val insertedId: AdId = insertInDatabase(ad)
+                    printConsoleIO(s"Inserted ad with id: $insertedId")
+                }
     } yield output
 
   private def readAd(): Unit = { //TODO: Wrap in IO

@@ -8,10 +8,12 @@ trait AdServer extends Server with Database[Ad] {
     val adData: String                = readLine("Enter ad data: ")
     val parsedAd: Either[AdError, Ad] = Ad.fromString(adData)
 
-    parsedAd.fold(err => printConsole(err.message), ad => {
-      val insertedId: AdId = insertInDatabase(ad)
-      printConsole(s"Inserted ad with id: $insertedId")
-    })
+    parsedAd match {
+      case Left(err) => printConsole(err.message)
+      case Right(ad) =>
+        val insertedId: AdId = insertInDatabase(ad)
+        printConsole(s"Inserted ad with id: $insertedId")
+    }
   }
 
   private def readAd(): Unit = {
