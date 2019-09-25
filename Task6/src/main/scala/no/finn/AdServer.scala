@@ -25,7 +25,7 @@ trait AdServer extends Server with Database[Ad] {
     printConsole(getFromDatabase(adId).get.toConsoleString)
   }
 
-  def loop(): IO[Unit] = { //TODO: Implement as for-comprehension in IO monad
+  def loop(): Unit = { //TODO: Implement as for-comprehension in IO monad
     val mode = Mode.fromString(readLine("Select mode: quit, add, read: "))
 
     mode match {
@@ -37,7 +37,7 @@ trait AdServer extends Server with Database[Ad] {
     if (mode != QuitMode) run() else ()
   }
 
-  def run(): Unit = loop().unsafeRunSync()
+  def run(): Unit = loop()
 
 }
 

@@ -14,10 +14,6 @@ case class JobAd(company: String, monthlySalary: Long) extends Ad {
 object Ad {
   private def splitString(s: String): List[String] = s.split(' ').toList
 
-  private implicit class SafeStringToLong(private val s: String) {
-    def toLongOption: Option[Long] = scala.util.Try(s.toLong).toOption
-  }
-
   def fromString(s: String): Option[Ad] =
     splitString(s) match {
       case prod :: regNr :: price :: Nil if prod == "car" =>
