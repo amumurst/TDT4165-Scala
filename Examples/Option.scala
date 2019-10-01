@@ -5,7 +5,7 @@
 val myList = List(1, 2, 42)
 
 val trippleSum  = myList match {
-  case firstElement::secElement::thirdElement::Nil => firstElement+secElement+thirdElement
+  case firstElement :: secElement :: thirdElement :: Nil => firstElement+secElement+thirdElement
   case _ => 0
 }
 
@@ -13,12 +13,12 @@ val trippleSum  = myList match {
 /*
 Option is a ADT!
 
-trait Option[A]
-
-case class Some[A](a: A) extends Option[A]
-case object None extends Option[Nothing]
 * */
 
+trait MyOption[A]
+
+case class MySome[A](a: A) extends MyOption[A]
+case object MyNone extends MyOption[Nothing]
 
 
 
