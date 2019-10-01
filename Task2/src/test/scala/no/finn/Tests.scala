@@ -1,36 +1,15 @@
 package no.finn
 
-import org.scalatest.FunSuite
 import no.finn.common._
-
-trait TestConsole extends Console {
-  val inputs: List[String]
-  var outputs: List[String] = List.empty
-
-  var currentInput  = 0
-  var currentOutPut = 0
-
-  override def readLine(text: String): String = {
-    val temp = inputs(currentInput)
-    currentInput = currentInput + 1
-    temp
-  }
-
-  override def printConsole(text: String): Unit =
-    outputs = outputs :+ text
-
-}
+import org.scalatest.FunSuite
 
 class Tests extends FunSuite {
-
-  def getServer(inputStrings: List[String]): Server with TestConsole =
-    new AdServer with TestConsole {
-      override val inputs: List[String] = inputStrings
+  test("Normal usage") {
+    val testConsole = new TestConsole {
+      override val inputs: List[String] =
+        List("add", "car mercedes 4000", "add", "job MyFirm 100", "read", "0", "read", "1", "quit")
     }
 
-  test("Implementation") {
-    val inputs =
-      List("add", "car mercedes 4000", "add", "job MyFirm 100", "read", "0", "read", "1", "quit")
     val expectedOutputs =
       List("Inserted ad with id: AdId(0)",
            "Inserted ad with id: AdId(1)",
@@ -38,36 +17,17 @@ class Tests extends FunSuite {
            "job MyFirm 100",
            "Goodbye")
 
-    val server = getServer(inputs)
+    val server = new AdServer(new AdDatabase[Ad], testConsole)
 
-    server.run()
-    val outputs = server.outputs
-
-    assert(outputs === expectedOutputs)
-
-  }
-  def getServerSolution(inputStrings: List[String]): Server with TestConsole =
-    new no.solution.AdServer with TestConsole {
-      override val inputs: List[String] = inputStrings
-    }
-
-  test("Solution") {
-    val inputs =
-      List("add", "car mercedes 4000", "add", "job MyFirm 100", "read", "0", "read", "1", "quit")
-    val expectedOutputs =
-      List("Inserted ad with id: AdId(0)",
-           "Inserted ad with id: AdId(1)",
-           "car mercedes 4000",
-           "job MyFirm 100",
-           "Goodbye")
-
-    val server = getServerSolution(inputs)
-
-    server.run()
-    val outputs = server.outputs
+    server.start()
+    val outputs = testConsole.outputs
 
     assert(outputs === expectedOutputs)
-
   }
 
+  def adCyclicalTest(ad: Ad) = assert(Ad.fromString(ad.toConsoleString) === ad)
+
+  test("Ad parsing is cyclical for unknown ad") {
+    adCyclicalTest(UnknownAdType)
+  }
 }

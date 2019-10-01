@@ -1,5 +1,5 @@
 package no.finn
 
-sealed trait AdError{
+sealed trait AdError {
   def message: String
 }

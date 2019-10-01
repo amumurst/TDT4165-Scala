@@ -1,47 +1,45 @@
 package no.finn
 
+import cats.effect.IO
 import no.finn.common._
 
-import cats.effect.IO
+class AdServer(db: AdDatabase[Ad], console: Console) {
+  def readConsoleIO(text: String)  = IO(console.readLine(text))
+  def printConsoleIO(text: String) = IO(console.printConsole(text))
 
-trait AdServer extends Server with Database[Ad] {
-
-  def printConsoleIO(s: String): IO[Unit]       = IO(printConsole(s))
-  def readStringIO(message: String): IO[String] = IO(readLine(message))
-
-  private def addAd(): IO[Unit] =
+  private val addAd: IO[Unit] =
     for {
-      adData <- readStringIO("Enter ad data: ")
-      output <- Ad.fromString(adData) match {
-                  case Left(err) => printConsoleIO(err.message)
-                  case Right(ad) =>
-                    val insertedId: AdId = insertInDatabase(ad)
-                    printConsoleIO(s"Inserted ad with id: $insertedId")
-                }
-    } yield output
+      adData <- readConsoleIO("Enter ad data: ")
+      a <- Ad.fromString(adData) match {
+            case Left(value) => printConsoleIO(value.message)
+            case Right(ad) =>
+              val insertedId: AdId = db.insert(ad)
+              printConsoleIO(s"Inserted ad with id: $insertedId")
+          }
+    } yield ()
 
-  private def readAd(): Unit = { //TODO: Wrap in IO
-    val adId: AdId = AdId(readLine("Enter adId: ").toLong)
-    printConsole(getFromDatabase(adId).get.toConsoleString)
+  //TODO: use readConsoleIO instead of console.readLine
+  private def readAd(): Unit = {
+    val adId: AdId = AdId(console.readLine("Enter adId: ").toLong)
+    console.printConsole(db.get(adId).get.toConsoleString)
   }
 
-  def loop(): Unit = { //TODO: Implement as for-comprehension in IO monad
-    val mode = Mode.fromString(readLine("Select mode: quit, add, read: "))
+  //TODO: Implement as for-comprehension in the IO monad eg. for{... <- ...} yield ()
+  def start(): Unit = {
+
+    val userInput = console.readLine("Select mode: quit, add, read: ")
+    val mode      = Mode.fromString(userInput)
 
     mode match {
-      case AddMode     => addAd()
+      case AddMode     => addAd.unsafeRunSync() //TODO: Do not call this internally in functions
       case ReadMode    => readAd()
-      case UnknownMode => printConsole("unknown mode")
-      case QuitMode    => printConsole("Goodbye")
+      case UnknownMode => console.printConsole("unknown mode")
+      case QuitMode    => console.printConsole("Goodbye")
     }
-    if (mode != QuitMode) run() else ()
+    if (mode != QuitMode) start() else ()
   }
-
-  def run(): Unit = loop()
-
 }
 
-object Main extends AdServer with RealConsole {
-  def main(args: Array[String]): Unit =
-    run()
+object Main {
+  def main(args: Array[String]): Unit = new AdServer(new AdDatabase[Ad], RealConsole).start()
 }

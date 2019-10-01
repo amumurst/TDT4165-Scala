@@ -15,9 +15,9 @@ object Ad {
     val stringList: List[String] = splitString(s)
 
     if (stringList(0) == "car") {
-      ???
+      UnknownAdType
     } else if (stringList(0) == "job") {
-      ???
+      UnknownAdType
     } else {
       UnknownAdType
     }

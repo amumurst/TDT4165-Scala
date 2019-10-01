@@ -1,48 +1,44 @@
 package no.solution
 
+import cats.effect.IO
 import no.finn.common._
 
-import cats.effect.IO
+class AdServer(db: AdDatabase[Ad], console: Console) {
+  def readConsoleIO(text: String)  = IO(console.readLine(text))
+  def printConsoleIO(text: String) = IO(console.printConsole(text))
 
-trait AdServer extends Server with Database[Ad] {
-
-  def printConsoleIO(s: String): IO[Unit]       = IO(printConsole(s))
-  def readStringIO(message: String): IO[String] = IO(readLine(message))
-
-  private def addAd(): IO[Unit] =
+  private val addAd: IO[Unit] =
     for {
-      adData <- readStringIO("Enter ad data: ")
-      output <- Ad
-                 .fromString(adData)
-                 .fold(err => printConsoleIO(err.message), ad => {
-                   val insertedId: AdId = insertInDatabase(ad)
-                   printConsoleIO(s"Inserted ad with id: $insertedId")
-                 })
-    } yield output
+      adData <- readConsoleIO("Enter ad data: ")
+      a <- Ad.fromString(adData) match {
+            case Left(value) => printConsoleIO(value.message)
+            case Right(ad) =>
+              val insertedId: AdId = db.insert(ad)
+              printConsoleIO(s"Inserted ad with id: $insertedId")
+          }
+    } yield ()
 
-  private def readAd(): IO[Unit] =
+  private val readAd: IO[Unit] =
     for {
-      adId   <- readStringIO("Enter adId: ").map(s => AdId(s.toLong))
-      output <- printConsoleIO(getFromDatabase(adId).get.toConsoleString)
-    } yield output
+      adId <- readConsoleIO("Enter adId: ").map(s => AdId(s.toLong))
+      _    <- printConsoleIO(db.get(adId).get.toConsoleString)
+    } yield ()
 
-  def loop(): IO[Unit] =
+  val start: IO[Unit] =
     for {
-      mode <- readStringIO("Select mode: quit, add, read: ").map(Mode.fromString)
+      userInput <- readConsoleIO("Select mode: quit, add, read: ")
+      mode      = Mode.fromString(userInput)
       _ <- mode match {
-            case AddMode     => addAd()
-            case ReadMode    => readAd()
+            case AddMode     => addAd
+            case ReadMode    => readAd
             case UnknownMode => printConsoleIO("unknown mode")
             case QuitMode    => printConsoleIO("Goodbye")
           }
-      runAgain <- if (mode != QuitMode) loop() else IO.unit
+      runAgain <- if (mode != QuitMode) start else IO.unit
     } yield runAgain
-
-  def run(): Unit = loop().unsafeRunSync()
-
 }
 
-object MainSolution extends AdServer with RealConsole {
+object Main {
   def main(args: Array[String]): Unit =
-    run()
+    new AdServer(new AdDatabase[Ad], RealConsole).start.unsafeRunSync()
 }

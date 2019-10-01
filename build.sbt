@@ -11,10 +11,13 @@ val commonSettings: List[SettingsDefinition] = List(
 )
 
 lazy val common = project.in(file("Common")).settings(commonSettings: _*).settings(name := "common")
-//lazy val examples = project.in(file("Examples")).settings(commonSettings: _*).settings(name := "examples")
+lazy val examples = project.in(file("Examples")).settings(commonSettings: _*).settings(name := "examples")
 
 def opg(navn: String) =
-  sbt.Project.apply(navn, file(navn)).settings(commonSettings: _*).settings(name := navn, mainClass in (Compile, run) := Some("no.finn.Main")).dependsOn(common)
+  Project(navn, file(navn))
+    .settings(commonSettings: _*)
+    .settings(name := navn, mainClass in (Compile, run) := Some("no.finn.Main"))
+    .dependsOn(common % "test->test;compile->compile")
 
 lazy val Task0 = opg("Task0")
 lazy val Task1 = opg("Task1")
