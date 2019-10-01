@@ -1,5 +1,10 @@
+#### Setup for Intellij
+- Install the scala plugin (Preferences -> Plugins -> Search 'scala' -> Restart Intellij)
+- Open project in Intellij
+- Choose project JDK 1.8 (only tested on java8), leave rest as defaults
+
 #### Running
-- Run `sbt` in console
+- Run `sbt` in console or use sbt shell tab in intellij 
 - ...Wait..
 - Do `TaskN/compile` to compile
 - Do `TaskN/run` to run
