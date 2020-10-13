@@ -16,9 +16,9 @@ object Ad {
 
   def fromString(s: String): Option[Ad] =
     splitString(s) match {
-      case prod :: regNr :: price :: Nil if prod == "car" =>
+      case "car" :: regNr :: price :: Nil =>
         None // TODO: Implement
-      case prod :: company :: salary :: Nil if prod == "job" =>
+      case "job" :: company :: salary :: Nil =>
         None // TODO: Implement
       case _ => None
     }

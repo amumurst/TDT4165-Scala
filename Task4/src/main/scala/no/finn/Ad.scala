@@ -16,9 +16,9 @@ object Ad {
 
   def fromString(s: String): Option[Ad] =
     splitString(s) match {
-      case prod :: regNr :: price :: Nil if prod == "car" =>
+      case "car" :: regNr :: price :: Nil =>
         price.toLongOption.map(long => CarAd(regNr, long))
-      case prod :: company :: salary :: Nil if prod == "job" =>
+      case "job" :: company :: salary :: Nil =>
         salary.toLongOption.map(long => JobAd(company, long))
       case _ => None
     }

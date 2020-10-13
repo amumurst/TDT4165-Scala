@@ -20,12 +20,13 @@ object Ad {
   def fromString(s: String): Ad = {
     val stringList: List[String] = splitString(s)
 
-    if (stringList(0) == "car") {
-      CarAd(stringList(1), stringList(2).toLong)
-    } else if (stringList(1) == "job") {
-      JobAd(stringList(1), stringList(2).toLong)
-    } else {
-      UnknownAdType
+    stringList match {
+      case "car" :: regnr :: price :: Nil =>
+        CarAd(regnr, price.toLong)
+      case "job" :: company :: salary :: Nil =>
+        JobAd(company, salary.toLong)
+      case _ =>
+        UnknownAdType
     }
   }
 }

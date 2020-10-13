@@ -14,12 +14,9 @@ object Ad {
   def fromString(s: String): Ad = {
     val stringList: List[String] = splitString(s)
 
-    if (stringList(0) == "car") {
-      UnknownAdType
-    } else if (stringList(0) == "job") {
-      UnknownAdType
-    } else {
-      UnknownAdType
+    stringList match {
+      case _ =>
+        UnknownAdType
     }
   }
 }
