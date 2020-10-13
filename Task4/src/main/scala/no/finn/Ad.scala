@@ -14,6 +14,7 @@ case class JobAd(company: String, monthlySalary: Long) extends Ad {
 object Ad {
   private def splitString(s: String): List[String] = s.split(' ').toList
 
+  //TODO: Change return type to Either[AdError, Ad]
   def fromString(s: String): Option[Ad] =
     splitString(s) match {
       case "car" :: regNr :: price :: Nil =>

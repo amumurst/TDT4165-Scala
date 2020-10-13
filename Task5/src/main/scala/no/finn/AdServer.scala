@@ -22,6 +22,7 @@ class AdServer(db: AdDatabase[Ad], console: Console) {
   }
 
   def start(): Unit = {
+    //TODO: Replace this var and while with a tail-recursive variant
     var mode: Mode = UnknownMode
 
     while (mode != QuitMode) {

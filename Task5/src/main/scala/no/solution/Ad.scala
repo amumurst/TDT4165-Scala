@@ -17,13 +17,15 @@ object Ad {
   def fromString(s: String): Either[AdError, Ad] =
     splitString(s) match {
       case "car" :: regNr :: price :: Nil =>
-        price.toLongOption
-          .toRight(LongParseError(s"price was badly formated [$price]"))
-          .map(long => CarAd(regNr, long))
+        price.toLongOption match {
+          case Some(value) => Right(CarAd(regNr, value))
+          case None        => Left(LongParseError(s"price was badly formated [$price]"))
+        }
       case "job" :: company :: salary :: Nil =>
-        salary.toLongOption
-          .toRight(LongParseError(s"salary was badly formated [$salary]"))
-          .map(long => JobAd(company, long))
-      case _ => Left(ArgumentsError("Bad arguments!"))
+        salary.toLongOption match {
+          case Some(value) => Right(JobAd(company, value))
+          case None        => Left(LongParseError(s"price was badly formated [$salary]"))
+        }
+      case _ => Left(ArgumentsError(s"Bad arguments! $s"))
     }
 }

@@ -7,9 +7,13 @@ class AdServer(db: AdDatabase[Ad], console: Console) {
     val adData: String       = console.readLine("Enter ad data: ")
     val parsedAd: Option[Ad] = Ad.fromString(adData)
 
-    parsedAd.foreach { ad =>
-      val insertedId: AdId = db.insert(ad)
-      console.printConsole(s"Inserted ad with id: $insertedId")
+    //TODO: Change to Either based matching
+    parsedAd match {
+      case Some(value) =>
+        val insertedId: AdId = db.insert(value)
+        console.printConsole(s"Inserted ad with id: $insertedId")
+      case None =>
+        ()
     }
   }
 

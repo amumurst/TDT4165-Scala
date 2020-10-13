@@ -27,14 +27,14 @@ class AdServer(db: AdDatabase[Ad], console: Console) {
   //TODO: Implement as for-comprehension in the IO monad eg. for{... <- ...} yield ()
   def start(): IO[Unit] = {
 
-    val userInput = console.readLine("Select mode: quit, add, read: ")
+    val userInput = console.readLine("Select mode: quit, add, read: ") //TODO: Replace with IO variant
     val mode      = Mode.fromString(userInput)
 
     mode match {
-      case AddMode     => addAd.unsafeRunSync() //TODO: Do not call this internally in functions
-      case ReadMode    => readAd()
-      case UnknownMode => console.printConsole("unknown mode")
-      case QuitMode    => console.printConsole("Goodbye")
+      case AddMode     => addAd.unsafeRunSync() //TODO: Remove call to unsafeRunSync()
+      case ReadMode    => readAd() //TODO: Replace with IO variant
+      case UnknownMode => console.printConsole("unknown mode") //TODO: Replace with IO variant
+      case QuitMode    => console.printConsole("Goodbye") //TODO: Replace with IO variant
     }
     if (mode != QuitMode) start() else IO.unit
   }

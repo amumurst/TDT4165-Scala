@@ -15,6 +15,7 @@ class AdServer(db: AdDatabase[String], console: Console) {
   }
 
   def start(): Unit = {
+    //TODO: change type to Mode
     var mode: String = ""
 
     while (mode != "quit") {
