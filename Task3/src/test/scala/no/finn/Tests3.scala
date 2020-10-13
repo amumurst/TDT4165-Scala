@@ -3,7 +3,7 @@ package no.finn
 import no.finn.common._
 import org.scalatest.funsuite.AnyFunSuite
 
-class Tests extends AnyFunSuite {
+class Tests3 extends AnyFunSuite {
   test("Normal usage") {
     val testConsole = new TestConsole {
       override val inputs: List[String] =
@@ -25,9 +25,16 @@ class Tests extends AnyFunSuite {
     assert(outputs === expectedOutputs)
   }
 
-  def adCyclicalTest(ad: Ad) = assert(Ad.fromString(ad.toConsoleString) === ad)
+  def adCyclicalTest(ad: Option[Ad]) =
+    assert(ad.flatMap(a => Ad.fromString(a.toConsoleString)) === ad)
 
-  test("Ad parsing is cyclical for unknown ad") {
-    adCyclicalTest(UnknownAdType)
+  test("Ad parsing is cyclical for car ad") {
+    adCyclicalTest(Some(CarAd("aj12332", 5000)))
+  }
+  test("Ad parsing is cyclical for job ad") {
+    adCyclicalTest(Some(JobAd("FINN.no", 9999999)))
+  }
+  test("Ad parsing is cyclical for nothing") {
+    adCyclicalTest(None)
   }
 }

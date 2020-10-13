@@ -3,7 +3,7 @@ package no.finn
 import no.finn.common._
 import org.scalatest.funsuite.AnyFunSuite
 
-class Tests extends AnyFunSuite {
+class Tests1 extends AnyFunSuite {
   test("Normal usage") {
     val testConsole = new TestConsole {
       override val inputs: List[String] =

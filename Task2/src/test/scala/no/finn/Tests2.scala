@@ -3,7 +3,7 @@ package no.finn
 import no.finn.common._
 import org.scalatest.funsuite.AnyFunSuite
 
-class Tests extends AnyFunSuite {
+class Tests2 extends AnyFunSuite {
   test("Normal usage") {
     val testConsole = new TestConsole {
       override val inputs: List[String] =
@@ -17,7 +17,7 @@ class Tests extends AnyFunSuite {
            "job MyFirm 100",
            "Goodbye")
 
-    val server = new AdServer(new AdDatabase[String], testConsole)
+    val server = new AdServer(new AdDatabase[Ad], testConsole)
 
     server.start()
     val outputs = testConsole.outputs
@@ -25,4 +25,9 @@ class Tests extends AnyFunSuite {
     assert(outputs === expectedOutputs)
   }
 
+  def adCyclicalTest(ad: Ad) = assert(Ad.fromString(ad.toConsoleString) === ad)
+
+  test("Ad parsing is cyclical for unknown ad") {
+    adCyclicalTest(UnknownAdType)
+  }
 }

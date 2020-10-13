@@ -3,7 +3,7 @@ package no.finn
 import no.finn.common._
 import org.scalatest.funsuite.AnyFunSuite
 
-class Tests extends AnyFunSuite {
+class Tests5 extends AnyFunSuite {
   test("Normal usage") {
     val testConsole = new TestConsole {
       override val inputs: List[String] =
@@ -28,7 +28,7 @@ class Tests extends AnyFunSuite {
         "Inserted ad with id: AdId(1)",
         "car mercedes 4000",
         "job MyFirm 100",
-        "Bad arguments!",
+        "Bad arguments! boat 500",
         "price was badly formated [400kr]",
         "Goodbye"
       )
