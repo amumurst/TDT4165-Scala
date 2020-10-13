@@ -1,5 +1,5 @@
 object EitherExample {
-    /*
+  /*
   Either is also an ADT
 
   trait Either[L, R]
@@ -8,10 +8,8 @@ object EitherExample {
   case class Right[R](r: R) extends Either[Nothing, R]
    */
 
-
-  val helloOption: Option[Int] = Some(42)
+  val helloOption: Option[Int]             = Some(42)
   val resultEither: Either[Throwable, Int] = helloOption.toRight(new Throwable("No hello found"))
-
 
   /*
     Eithers are right-biased
@@ -25,10 +23,10 @@ object EitherExample {
 
   /*
     Getting result; pattern match!
-  */
+   */
 
   val resultingString: String = stringedThrowableEither match {
-    case Right(i) => i.toString
+    case Right(i)      => i.toString
     case Left(message) => message
   }
 }

@@ -1,4 +1,3 @@
-
 val commonSettings: List[SettingsDefinition] = List(
   inThisBuild(
     List(
@@ -6,12 +5,13 @@ val commonSettings: List[SettingsDefinition] = List(
       scalaVersion := "2.13.3",
       version := "0.1.0-SNAPSHOT"
     )),
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % Test,
+  libraryDependencies += "org.scalatest" %% "scalatest"   % "3.2.2" % Test,
   libraryDependencies += "org.typelevel" %% "cats-effect" % "2.2.0"
 )
 
 lazy val common = project.in(file("Common")).settings(commonSettings: _*).settings(name := "common")
-lazy val examples = project.in(file("Examples")).settings(commonSettings: _*).settings(name := "examples")
+lazy val examples =
+  project.in(file("Examples")).settings(commonSettings: _*).settings(name := "examples")
 
 def opg(navn: String) =
   Project(navn, file(navn))
@@ -26,3 +26,6 @@ lazy val Task3 = opg("Task3")
 lazy val Task4 = opg("Task4")
 lazy val Task5 = opg("Task5")
 lazy val Task6 = opg("Task6")
+
+lazy val root =
+  project.in(file(".")).aggregate(common, examples, Task0, Task1, Task2, Task3, Task4, Task5, Task6)
