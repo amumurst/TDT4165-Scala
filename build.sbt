@@ -3,11 +3,11 @@ val commonSettings: List[SettingsDefinition] = List(
   inThisBuild(
     List(
       organization := "no.finn",
-      scalaVersion := "2.13.1",
+      scalaVersion := "2.13.3",
       version := "0.1.0-SNAPSHOT"
     )),
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test,
-  libraryDependencies += "org.typelevel" %% "cats-effect" % "2.0.0"
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % Test,
+  libraryDependencies += "org.typelevel" %% "cats-effect" % "2.2.0"
 )
 
 lazy val common = project.in(file("Common")).settings(commonSettings: _*).settings(name := "common")
